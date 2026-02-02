@@ -1,6 +1,7 @@
 import express from "express";
 import { Routes } from "./utils/route.Interface";
 import { connect } from "mongoose";
+import { errorMiddleware } from "./middlewares/errorMiddleware";
 
 class App {
   public app: express.Application;
@@ -11,6 +12,7 @@ class App {
     this.port = 8080;
     this.initializeMiddlewares();
     this.initializeRoutes(routes);
+    this.initializeErrorHandling();
     this.connectDatabase();
   }
 
@@ -24,6 +26,10 @@ class App {
     routes.forEach((route) => {
       this.app.use("/", route.router);
     });
+  }
+
+  private initializeErrorHandling() {
+    this.app.use(errorMiddleware);
   }
 
   private initializeMiddlewares() {
